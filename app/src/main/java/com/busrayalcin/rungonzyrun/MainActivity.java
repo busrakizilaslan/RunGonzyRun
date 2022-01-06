@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,"Game Over!",Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(MainActivity.this, startScreen.class);
+                        intent.putExtra("SCORE",score);
                         startActivity(intent);
 
                         
