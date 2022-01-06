@@ -13,6 +13,7 @@ public class startScreen extends AppCompatActivity {
     ImageView imageView5 ;
     TextView mainScoreText ;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
