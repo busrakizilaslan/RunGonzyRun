@@ -25,14 +25,11 @@ public class startScreen extends AppCompatActivity {
         Intent intent = getIntent();
         int score = intent.getIntExtra("SCORE",0);
         mainScoreText.setText(""+score);
-
     }
 
     public void play (View view){
-
         Intent intent = new Intent(startScreen.this,MainActivity.class);
         startActivity(intent);
-
     }
 
 }
