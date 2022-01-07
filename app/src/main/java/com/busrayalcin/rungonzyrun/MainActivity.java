@@ -3,8 +3,10 @@ package com.busrayalcin.rungonzyrun;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView timeText ;
     TextView scoreText ;
+    TextView topScoreText;
     int score ;
     ImageView imageView ;
     ImageView imageView2 ;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView[] imageArray ;
     Handler handler ;
     Runnable runnable ;
+    SharedPreferences sharedPreferences ;
 
 
     @Override
@@ -34,17 +38,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sharedPreferences = this.getSharedPreferences("com.busrayalcin.rungonzyrun", Context.MODE_PRIVATE);
+        int storedScore = sharedPreferences.getInt("storedScore",0);
         timeText = findViewById(R.id.timeText);
         scoreText = findViewById(R.id.scoreText);
+        topScoreText = findViewById(R.id.topScoreText);
         imageView = findViewById(R.id.imageView);
         imageView2 = findViewById(R.id.imageView2);
         imageView3 = findViewById(R.id.imageView3);
         imageView4 = findViewById(R.id.imageView4);
 
+
         imageArray = new ImageView[]{imageView,imageView2,imageView3,imageView4} ;
 
         hideImages();
         score = 0 ;
+
+        topScoreText.setText("Top Score : "+storedScore);
 
 
         new CountDownTimer(10000, 1000) {
@@ -62,18 +72,21 @@ public class MainActivity extends AppCompatActivity {
                 for (ImageView image : imageArray){
                     image.setVisibility(View.INVISIBLE);
                 }
+
+                //SCORE TOP SCOREDAN YUKSEKSE KAYDET
+                if(score > storedScore){
+                    sharedPreferences.edit().putInt("storedScore",score).apply();
+                }
+
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                 alert.setTitle("Restart");
                 alert.setMessage("Do you want to restart?");
                 alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         Intent intent = getIntent();
                         finish();
                         startActivity(intent);
-
-
                     }
                 });
 
@@ -83,10 +96,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,"Game Over!",Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(MainActivity.this, startScreen.class);
-                        intent.putExtra("SCORE",score);
                         startActivity(intent);
-
-                        
                     }
                 });
                 alert.show();
